@@ -24,9 +24,9 @@ public class ProductServiceTest {
             .build();
     }
 
-    public static ProductRecord createProductRecord() {
+    public static ProductRecord createProductRecord(Long id) {
         return new ProductRecord(
-            1L,
+            id,
             "namer",
             "My Product has a name",
             "ABC-12345-S-BL",

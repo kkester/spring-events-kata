@@ -3,11 +3,15 @@ package io.pivotal.events.catalog;
 import io.pivotal.events.product.ProductEntity;
 import io.pivotal.events.product.ProductRecord;
 import io.pivotal.events.product.ProductService;
+import io.pivotal.events.util.FutureUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Future;
 
 @Service
 @RequiredArgsConstructor
@@ -17,12 +21,16 @@ public class CatalogService {
     private final ProductService productService;
     private final CatalogRepository catalogRepository;
     private final CatalogMapper catalogMapper;
+    private final Executor taskExecutor;
 
     public CatalogRecord getCatalog(Long catalogId) {
         log.info("Getting catalog for {}", catalogId);
         CatalogEntity catalogEntity = catalogRepository.findById(catalogId).orElseThrow();
-        List<ProductRecord> products = catalogEntity.getProducts().stream()
+        List<Future<ProductRecord>> productFutures = catalogEntity.getProducts().stream()
             .map(this::toProductRecord)
+            .toList();
+        List<ProductRecord> products = productFutures.stream()
+            .map(FutureUtil::get)
             .toList();
         return new CatalogRecord(
             catalogEntity.getId(),
@@ -34,8 +42,8 @@ public class CatalogService {
         );
     }
 
-    private ProductRecord toProductRecord(ProductEntity productEntity) {
-        return productService.getProductById(productEntity.getId());
+    private Future<ProductRecord> toProductRecord(ProductEntity productEntity) {
+        return CompletableFuture.supplyAsync(() -> productService.getProductById(productEntity.getId()), taskExecutor);
     }
 
     public void saveCatalog(CatalogRecord catalogRecord) {

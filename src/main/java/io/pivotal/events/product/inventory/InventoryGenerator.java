@@ -1,10 +1,13 @@
 package io.pivotal.events.product.inventory;
 
+import io.pivotal.events.product.ProductCreatedEvent;
 import io.pivotal.events.product.ProductEntity;
 import io.pivotal.events.product.ProductService;
+import jakarta.persistence.EntityListeners;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,6 +16,11 @@ import org.springframework.stereotype.Component;
 public class InventoryGenerator {
 
     private final ProductService productService;
+
+    @EventListener
+    void handle(ProductCreatedEvent event) {
+        establishInventory(event.getProductEntity());
+    }
 
     @SneakyThrows
     public void establishInventory(ProductEntity productEntity) {
