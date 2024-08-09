@@ -1,24 +1,15 @@
 package io.pivotal.events.product;
 
-import io.pivotal.events.product.inventory.InventoryStatusEntity;
-import io.pivotal.events.product.inventory.InventoryStatusRecord;
-import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
+import static org.awaitility.Awaitility.await;
+import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest
@@ -30,18 +21,22 @@ public class ProductServiceTest {
             .name("namer")
             .description("My Product has a name")
             .sku("ABC-12345-S-BL")
-            .createdDate(LocalDateTime.now())
             .build();
     }
 
     public static ProductRecord createProductRecord() {
-        return new ProductRecord(1L, "namer", "My Product has a name", "ABC-12345-S-BL", LocalDateTime.now(), null);
+        return new ProductRecord(
+            1L,
+            "namer",
+            "My Product has a name",
+            "ABC-12345-S-BL",
+            null);
     }
 
     @Autowired
     ProductService productService;
 
-    @Autowired
+    @MockBean
     ProductRepository productRepository;
 
     @Test
@@ -54,10 +49,8 @@ public class ProductServiceTest {
 
         productService.createProduct(product);
 
-        List<ProductEntity> productEntities = productRepository.findAll();
-        assertThat(productEntities).hasSize(1)
-            .first()
-            .extracting("inventoryStatus")
-            .isEqualTo(new InventoryStatusEntity());
+        ArgumentCaptor<ProductEntity> captor = ArgumentCaptor.forClass(ProductEntity.class);
+        verify(productRepository, atMost(2)).save(captor.capture());
+        await().until(() -> captor.getValue().getInventoryStatus() != null);
     }
 }

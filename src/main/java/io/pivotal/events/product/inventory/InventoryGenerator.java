@@ -1,28 +1,28 @@
 package io.pivotal.events.product.inventory;
 
-import io.pivotal.events.product.ProductRecord;
+import io.pivotal.events.product.ProductEntity;
 import io.pivotal.events.product.ProductService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class InventoryGenerator {
 
     private final ProductService productService;
 
-    public void establishInventory(ProductRecord productRecord) {
-        InventoryStatusRecord inventoryStatus = new InventoryStatusRecord(
-            InventoryStatus.IN_STOCK,
-            100
-        );
-        productService.updateProduct(new ProductRecord(
-            productRecord.id(),
-            productRecord.name(),
-            productRecord.description(),
-            productRecord.sku(),
-            productRecord.createdDate(),
-            inventoryStatus
-        ));
+    @SneakyThrows
+    public void establishInventory(ProductEntity productEntity) {
+        Thread.sleep(3000);
+        log.info("Assigning inventory to {}", productEntity);
+        InventoryStatusEntity inventoryStatus = InventoryStatusEntity.builder()
+            .status(InventoryStatus.IN_STOCK)
+            .quantity(100)
+            .build();
+        productEntity.applyInventoryStatus(inventoryStatus);
+        productService.updateProduct(productEntity);
     }
 }

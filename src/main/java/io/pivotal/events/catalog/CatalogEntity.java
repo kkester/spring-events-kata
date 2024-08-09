@@ -29,8 +29,6 @@ public class CatalogEntity {
 
     private LocalDate endDate;
 
-    private LocalDateTime createdDate;
-
     @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "CATALOG_PRODUCT", joinColumns = @JoinColumn(name = "CATALOG_ID"), inverseJoinColumns = @JoinColumn(name = "PRODUCT_ID"))
     @Builder.Default

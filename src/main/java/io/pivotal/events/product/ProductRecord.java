@@ -8,6 +8,5 @@ public record ProductRecord(Long id,
                             String name,
                             String description,
                             String sku,
-                            LocalDateTime createdDate,
                             InventoryStatusRecord inventoryStatus) {
 }

@@ -27,8 +27,6 @@ public class ProductEntity {
 
     private String sku;
 
-    private LocalDateTime createdDate;
-
     @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private InventoryStatusEntity inventoryStatus;

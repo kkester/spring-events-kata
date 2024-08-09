@@ -10,13 +10,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static io.pivotal.events.product.ProductServiceTest.createProductEntity;
 import static io.pivotal.events.product.ProductServiceTest.createProductRecord;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,7 +41,6 @@ class CatalogServiceTest {
             .description("My Catalog has a name")
             .startDate(LocalDate.now())
             .endDate(LocalDate.now().plusYears(1))
-            .createdDate(LocalDateTime.now())
             .build();
     }
 
@@ -51,7 +50,6 @@ class CatalogServiceTest {
             "My Catalog has a name",
             LocalDate.now(),
             LocalDate.now().plusYears(1),
-            LocalDateTime.now(),
             List.of(createProductRecord())
         );
     }
@@ -62,6 +60,7 @@ class CatalogServiceTest {
         ProductEntity productEntity = createProductEntity();
         catalogEntity.addProduct(productEntity);
         when(catalogRepository.findById(catalogEntity.getId())).thenReturn(Optional.of(catalogEntity));
+        when(productRepository.findById(productEntity.getId())).thenReturn(Optional.of(productEntity));
 
         CatalogRecord catalogRecord = catalogService.getCatalog(catalogEntity.getId());
 
@@ -72,9 +71,12 @@ class CatalogServiceTest {
     @Test
     void createCatalog() {
         CatalogRecord catalogRecord = createCatalogRecord();
+        ProductEntity productEntity = createProductEntity();
+        when(productRepository.findAll()).thenReturn(List.of(productEntity));
 
         catalogService.saveCatalog(catalogRecord);
 
         verify(catalogRepository).save(any());
+        await().until(()-> !productEntity.getCatalogs().isEmpty());
     }
 }
