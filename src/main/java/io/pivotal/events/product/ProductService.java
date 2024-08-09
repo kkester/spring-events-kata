@@ -15,7 +15,12 @@ public class ProductService {
         return productMapper.productEntityToProductRecord(productEntity);
     }
 
-    public void saveProduct(ProductRecord productRecord) {
+    public void createProduct(NewProductRecord productRecord) {
+        ProductEntity productEntity = productMapper.newProductRecordToProductEntity(productRecord);
+        productRepository.save(productEntity);
+    }
+
+    public void updateProduct(ProductRecord productRecord) {
         ProductEntity productEntity = productMapper.productRecordToProductEntity(productRecord);
         productRepository.save(productEntity);
     }

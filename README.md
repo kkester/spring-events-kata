@@ -4,6 +4,17 @@ The intent of this Kata is to practice working with spring application events an
 
 The project comes with a set of Spring Boot tests and the minimal code needed for them to compile.  The goal of the exercise is to implement the code needed to get the tests to pass.  The project comes with a `compose.yaml` file that will spin up a PostGRES docker container.
 
+### Scenarios
+
+#### Create Catalog
+When a catalog is created, implement logic that will assign random products to the new catalog asynchronously 
+
+#### Create Product
+When a product is created, trigger an event that will establish inventory for the new product
+
+#### Get Catalog with Products
+Retrieve a catalog and then retrieve the products and convert them to records asynchronously.
+
 ### Prerequisites 
 
 This project requires the following tools to be installed.

@@ -16,7 +16,7 @@ public class InventoryGenerator {
             InventoryStatus.IN_STOCK,
             100
         );
-        productService.saveProduct(new ProductRecord(
+        productService.updateProduct(new ProductRecord(
             productRecord.id(),
             productRecord.name(),
             productRecord.description(),

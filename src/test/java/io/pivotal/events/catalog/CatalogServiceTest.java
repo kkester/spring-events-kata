@@ -17,6 +17,8 @@ import java.util.Optional;
 import static io.pivotal.events.product.ProductServiceTest.createProductEntity;
 import static io.pivotal.events.product.ProductServiceTest.createProductRecord;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -72,5 +74,7 @@ class CatalogServiceTest {
         CatalogRecord catalogRecord = createCatalogRecord();
 
         catalogService.saveCatalog(catalogRecord);
+
+        verify(catalogRepository).save(any());
     }
 }

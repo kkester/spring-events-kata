@@ -9,4 +9,5 @@ import org.springframework.stereotype.Component;
 public interface ProductMapper {
     ProductEntity productRecordToProductEntity(ProductRecord productRecord);
     ProductRecord productEntityToProductRecord(ProductEntity productEntity);
+    ProductEntity newProductRecordToProductEntity(NewProductRecord productRecord);
 }
