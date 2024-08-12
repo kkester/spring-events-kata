@@ -50,17 +50,20 @@ class CatalogServiceTest {
             "My Catalog has a name",
             LocalDate.now(),
             LocalDate.now().plusYears(1),
-            List.of(createProductRecord())
+            List.of(createProductRecord(1L),createProductRecord(2L))
         );
     }
 
     @Test
     void getCatalogWithProducts() {
         CatalogEntity catalogEntity = createCatalogEntity();
-        ProductEntity productEntity = createProductEntity();
-        catalogEntity.addProduct(productEntity);
+        ProductEntity productEntity1 = createProductEntity();
+        ProductEntity productEntity2 = createProductEntity().toBuilder().id(2L).build();
+        catalogEntity.addProduct(productEntity1);
+        catalogEntity.addProduct(productEntity2);
         when(catalogRepository.findById(catalogEntity.getId())).thenReturn(Optional.of(catalogEntity));
-        when(productRepository.findById(productEntity.getId())).thenReturn(Optional.of(productEntity));
+        when(productRepository.findById(productEntity1.getId())).thenReturn(Optional.of(productEntity1));
+        when(productRepository.findById(productEntity2.getId())).thenReturn(Optional.of(productEntity2));
 
         CatalogRecord catalogRecord = catalogService.getCatalog(catalogEntity.getId());
 

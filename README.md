@@ -7,7 +7,7 @@ The project comes with a set of Spring Boot tests and the minimal code needed fo
 ### Scenarios
 
 #### Create Catalog
-When a catalog is created, implement logic that will assign random products to the new catalog asynchronously 
+When a catalog is created, implement logic that will assign all existing products to the new catalog asynchronously 
 
 #### Create Product
 When a product is created, trigger an event that will establish inventory for the new product

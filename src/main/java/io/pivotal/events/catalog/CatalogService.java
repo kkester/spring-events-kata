@@ -21,6 +21,7 @@ public class CatalogService {
     public CatalogRecord getCatalog(Long catalogId) {
         log.info("Getting catalog for {}", catalogId);
         CatalogEntity catalogEntity = catalogRepository.findById(catalogId).orElseThrow();
+        // TODO: Convert each ProductEntity concurrently
         List<ProductRecord> products = catalogEntity.getProducts().stream()
             .map(this::toProductRecord)
             .toList();
@@ -42,6 +43,7 @@ public class CatalogService {
         log.info("Creating catalog {}", catalogRecord);
         CatalogEntity catalogEntity = catalogMapper.catalogRecordToCatalogEntity(catalogRecord);
         catalogRepository.save(catalogEntity);
+        // TODO: Assign products to new catalog asynchronously
         productService.assignProductsTo(catalogEntity);
     }
 }

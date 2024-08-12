@@ -27,6 +27,7 @@ public class ProductService {
         log.info("Creating product {}", productRecord);
         ProductEntity productEntity = productMapper.newProductRecordToProductEntity(productRecord);
         productRepository.save(productEntity);
+        // TODO: trigger an Application Event to establish inventory status asynchronously
         new InventoryGenerator(this).establishInventory(productEntity);
     }
 
