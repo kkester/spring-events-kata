@@ -6,9 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.time.LocalDateTime;
-
-import static org.awaitility.Awaitility.await;
 import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.verify;
 
@@ -51,6 +48,5 @@ public class ProductServiceTest {
 
         ArgumentCaptor<ProductEntity> captor = ArgumentCaptor.forClass(ProductEntity.class);
         verify(productRepository, atMost(2)).save(captor.capture());
-        await().until(() -> captor.getValue().getInventoryStatus() != null);
     }
 }

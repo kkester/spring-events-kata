@@ -41,9 +41,6 @@ public class CatalogService {
 
     public void saveCatalog(CatalogRecord catalogRecord) {
         log.info("Creating catalog {}", catalogRecord);
-        CatalogEntity catalogEntity = catalogMapper.catalogRecordToCatalogEntity(catalogRecord);
-        catalogRepository.save(catalogEntity);
-        // TODO: Assign products to new catalog asynchronously
-        productService.assignProductsTo(catalogEntity);
+
     }
 }

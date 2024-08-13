@@ -19,16 +19,12 @@ public class ProductService {
     public ProductRecord getProductById(Long productId) {
         Thread.sleep(1000);
         log.info("Getting product for {}", productId);
-        ProductEntity productEntity = productRepository.findById(productId).orElseThrow();
-        return productMapper.productEntityToProductRecord(productEntity);
+        return null;
     }
 
     public void createProduct(NewProductRecord productRecord) {
         log.info("Creating product {}", productRecord);
-        ProductEntity productEntity = productMapper.newProductRecordToProductEntity(productRecord);
-        productRepository.save(productEntity);
-        // TODO: trigger an Application Event to establish inventory status asynchronously
-        new InventoryGenerator(this).establishInventory(productEntity);
+
     }
 
     public void updateProduct(ProductEntity productEntity) {
@@ -39,9 +35,5 @@ public class ProductService {
     public void assignProductsTo(CatalogEntity catalogEntity) {
         Thread.sleep(3000);
         log.info("Assigning Products to {}", catalogEntity);
-        productRepository.findAll().forEach(product -> {
-            product.addCatalog(catalogEntity);
-            productRepository.save(product);
-        });
     }
 }
