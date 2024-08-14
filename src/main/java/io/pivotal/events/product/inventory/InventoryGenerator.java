@@ -1,9 +1,8 @@
 package io.pivotal.events.product.inventory;
 
-import io.pivotal.events.product.ProductCreatedEvent;
+import io.pivotal.events.product.event.ProductCreatedEvent;
 import io.pivotal.events.product.ProductEntity;
 import io.pivotal.events.product.ProductService;
-import jakarta.persistence.EntityListeners;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

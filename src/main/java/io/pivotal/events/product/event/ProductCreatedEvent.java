@@ -1,5 +1,6 @@
-package io.pivotal.events.product;
+package io.pivotal.events.product.event;
 
+import io.pivotal.events.product.ProductEntity;
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 

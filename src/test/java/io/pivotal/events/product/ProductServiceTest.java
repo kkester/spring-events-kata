@@ -7,10 +7,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.mockito.Mockito.atMost;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class ProductServiceTest {
@@ -52,5 +53,18 @@ public class ProductServiceTest {
         ArgumentCaptor<ProductEntity> captor = ArgumentCaptor.forClass(ProductEntity.class);
         verify(productRepository, atMost(2)).save(captor.capture());
         await().until(() -> captor.getValue().getInventoryStatus() != null);
+    }
+
+    @Test
+    void getProductsOnSale() {
+        ProductEntity product1 = createProductEntity();
+        ProductEntity product2 = createProductEntity();
+        ProductEntity product3 = createProductEntity();
+        ProductEntity product4 = createProductEntity();
+        when(productRepository.findAll()).thenReturn(List.of(product1,product2,product3,product4));
+
+        List<ProductRecord> productsOnSale = productService.getProductsOnSale();
+
+        assertThat(productsOnSale).hasSizeBetween(0,4);
     }
 }
