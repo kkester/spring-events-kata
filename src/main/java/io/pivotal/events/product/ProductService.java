@@ -7,11 +7,14 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class ProductService {
 
+    private final ProductMerchandising productMerchandising;
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
 
@@ -43,5 +46,12 @@ public class ProductService {
             product.addCatalog(catalogEntity);
             productRepository.save(product);
         });
+    }
+
+    public List<ProductRecord> getProductsOnSale() {
+        List<ProductEntity> productEntities = productRepository.findAll();
+        return productMerchandising.getProductsOnSale(productEntities).stream()
+            .map(productMapper::productEntityToProductRecord)
+            .toList();
     }
 }
