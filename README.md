@@ -16,7 +16,7 @@ When a product is created, trigger an event that will establish inventory for th
 Retrieve a catalog and then retrieve the products and convert them to records asynchronously.
 
 #### Get Products on Sale
-
+Iterate through all products and select ones that should be sold at a discount.  The solution should be implemented so that it conforms to [OCP](https://www.digitalocean.com/community/conceptual-articles/s-o-l-i-d-the-first-five-principles-of-object-oriented-design#open-closed-principle).  Currently, there is only an `InventoryChecker` that will decide if a product should be put on sale, but the solution should support adding any number of additional checkers with little to no changes to existing code.  All of the checker logic should be executed concurrently.  If any one checker determines that the product should be put on sale, then that product should be included in the results.
 
 ### Prerequisites 
 
