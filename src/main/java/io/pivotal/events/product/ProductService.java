@@ -27,12 +27,13 @@ public class ProductService {
         return productMapper.productEntityToProductRecord(productEntity);
     }
 
-    public void createProduct(NewProductRecord productRecord) {
+    public ProductRecord createProduct(NewProductRecord productRecord) {
         log.info("Creating product {}", productRecord);
         ProductEntity productEntity = productMapper.newProductRecordToProductEntity(productRecord);
-        productRepository.save(productEntity);
+        ProductEntity savedProductEntity = productRepository.save(productEntity);
         // TODO: trigger an Application Event to establish inventory status asynchronously
         new InventoryGenerator(this).establishInventory(productEntity);
+        return productMapper.productEntityToProductRecord(savedProductEntity);
     }
 
     public void updateProduct(ProductEntity productEntity) {
