@@ -1,4 +1,4 @@
-package io.pivotal.events.product.inventory;
+package io.pivotal.events.catalog;
 
 import io.pivotal.events.product.ProductEntity;
 import io.pivotal.events.product.merch.ProductSaleResultType;
@@ -14,23 +14,23 @@ import java.util.concurrent.TimeUnit;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class InventoryChecker implements ProductSaleSelector {
+public class CatalogChecker implements ProductSaleSelector {
 
     @SneakyThrows
     public ProductSaleResultType check(ProductEntity productEntity) {
-        log.info("Checking Inventory for Product {}", productEntity.getSku());
+        log.info("Checking Catalog for Product {}", productEntity.getSku());
         TimeUnit.MILLISECONDS.sleep(1000);
 
         ProductSaleResultType result;
         int random = new Random().nextInt(100);
         if (random > 50) {
-            log.info("Product {} Selected", productEntity.getSku());
+            log.info("Product {} Selected by Catalog", productEntity.getSku());
             result = ProductSaleResultType.ACCEPTED;
         } else if (random > 25) {
-            log.info("Product {} Declined", productEntity.getSku());
+            log.info("Product {} Declined by Catalog", productEntity.getSku());
             result = ProductSaleResultType.DECLINED;
         } else {
-            log.info("Product {} Rejected", productEntity.getSku());
+            log.info("Product {} Rejected by Catalog", productEntity.getSku());
             result = ProductSaleResultType.REJECTED;
         }
         return result;

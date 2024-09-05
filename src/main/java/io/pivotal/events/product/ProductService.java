@@ -2,6 +2,7 @@ package io.pivotal.events.product;
 
 import io.pivotal.events.catalog.CatalogEntity;
 import io.pivotal.events.product.inventory.InventoryGenerator;
+import io.pivotal.events.product.merch.ProductMerchandising;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
