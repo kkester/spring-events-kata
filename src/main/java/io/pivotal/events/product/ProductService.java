@@ -2,6 +2,7 @@ package io.pivotal.events.product;
 
 import io.pivotal.events.catalog.CatalogEntity;
 import io.pivotal.events.product.event.ProductCreatedEvent;
+import io.pivotal.events.product.merch.ProductMerchandising;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -55,7 +57,9 @@ public class ProductService {
     public List<ProductRecord> getProductsOnSale() {
         List<ProductEntity> productEntities = productRepository.findAll();
         return productMerchandising.getProductsOnSale(productEntities).stream()
-            .map(productMapper::productEntityToProductRecord)
-            .toList();
+                .map(productRepository::findById)
+                .map(Optional::orElseThrow)
+                .map(productMapper::productEntityToProductRecord)
+                .toList();
     }
 }
