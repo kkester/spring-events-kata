@@ -1,5 +1,6 @@
 package io.pivotal.events.product.event;
 
+import io.pivotal.events.product.merch.ProductSaleResultType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

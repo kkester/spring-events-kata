@@ -57,8 +57,6 @@ public class ProductService {
     public List<ProductRecord> getProductsOnSale() {
         List<ProductEntity> productEntities = productRepository.findAll();
         return productMerchandising.getProductsOnSale(productEntities).stream()
-                .map(productRepository::findById)
-                .map(Optional::orElseThrow)
                 .map(productMapper::productEntityToProductRecord)
                 .toList();
     }

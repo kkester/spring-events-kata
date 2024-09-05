@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -57,10 +56,10 @@ public class ProductServiceTest {
 
     @Test
     void getProductsOnSale() {
-        ProductEntity product1 = createProductEntity();
-        ProductEntity product2 = createProductEntity();
-        ProductEntity product3 = createProductEntity();
-        ProductEntity product4 = createProductEntity();
+        ProductEntity product1 = createProductEntity().toBuilder().id(1L).build();
+        ProductEntity product2 = createProductEntity().toBuilder().id(2L).build();
+        ProductEntity product3 = createProductEntity().toBuilder().id(3L).build();
+        ProductEntity product4 = createProductEntity().toBuilder().id(4L).build();
         when(productRepository.findAll()).thenReturn(List.of(product1,product2,product3,product4));
 
         List<ProductRecord> productsOnSale = productService.getProductsOnSale();

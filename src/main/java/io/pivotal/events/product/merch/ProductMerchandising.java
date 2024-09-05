@@ -3,7 +3,6 @@ package io.pivotal.events.product.merch;
 import io.pivotal.events.product.ProductEntity;
 import io.pivotal.events.product.event.ProductSaleCheckEvent;
 import io.pivotal.events.product.event.ProductSaleEvent;
-import io.pivotal.events.product.event.ProductSaleResultType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -17,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.*;
@@ -27,10 +25,11 @@ import static java.util.stream.Collectors.*;
 @Slf4j
 public class ProductMerchandising {
 
+    private final List<ProductSaleSelector> productSaleSelectors;
     private final ApplicationEventPublisher eventPublisher;
     private final CompletedEventPublications completedEventPublications;
 
-    public List<Long> getProductsOnSale(List<ProductEntity> productEntities) {
+    public List<ProductEntity> getProductsOnSale(List<ProductEntity> productEntities) {
         UUID requestId = UUID.randomUUID();
         productEntities.stream()
                 .map(productEntity -> new ProductSaleCheckEvent(requestId, productEntity))
@@ -41,10 +40,13 @@ public class ProductMerchandising {
         List<ProductSaleEvent> eventPublications = emptyList();
         while (!finished && timeOut.isAfter(LocalDateTime.now())) {
             eventPublications = getEventPublications(requestId);
-            finished = productEntities.size() == eventPublications.size();
+            finished = (productEntities.size() * productSaleSelectors.size()) == eventPublications.size();
         }
 
-        return processResults(eventPublications);
+        List<Long> selectedProductIds = processResults(eventPublications);
+        return productEntities.stream()
+                .filter(productEntity -> selectedProductIds.contains(productEntity.getId()))
+                .toList();
     }
 
     private static List<Long> processResults(List<ProductSaleEvent> eventPublications) {

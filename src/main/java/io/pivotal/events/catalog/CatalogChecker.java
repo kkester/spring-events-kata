@@ -1,4 +1,4 @@
-package io.pivotal.events.product.inventory;
+package io.pivotal.events.catalog;
 
 import io.pivotal.events.product.ProductEntity;
 import io.pivotal.events.product.event.ProductSaleCheckEvent;
@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class InventoryChecker implements ProductSaleSelector {
+public class CatalogChecker implements ProductSaleSelector {
 
     private final ApplicationEventPublisher eventPublisher;
 
@@ -30,12 +30,12 @@ public class InventoryChecker implements ProductSaleSelector {
     @SneakyThrows
     void handle(ProductSaleCheckEvent event) {
         ProductEntity productEntity = event.getProductEntity();
-        log.info("Checking Inventory for Product {}", productEntity.getSku());
+        log.info("Checking Catalog for Product {}", productEntity.getSku());
         TimeUnit.MILLISECONDS.sleep(1000);
 
         int random = new Random().nextInt(100);
         if (random > 50) {
-            log.info("Product {} Selected", productEntity.getSku());
+            log.info("Product {} Selected by Catalog", productEntity.getSku());
             eventPublisher.publishEvent(ProductSaleEvent.builder()
                     .requestId(event.getRequestId())
                     .productId(productEntity.getId())
@@ -43,7 +43,7 @@ public class InventoryChecker implements ProductSaleSelector {
                     .result(ProductSaleResultType.ACCEPTED)
                     .build());
         } else if (random > 25) {
-            log.info("Product {} Declined", productEntity.getSku());
+            log.info("Product {} Declined by Catalog", productEntity.getSku());
             eventPublisher.publishEvent(ProductSaleEvent.builder()
                     .requestId(event.getRequestId())
                     .productId(productEntity.getId())
@@ -51,7 +51,7 @@ public class InventoryChecker implements ProductSaleSelector {
                     .result(ProductSaleResultType.DECLINED)
                     .build());
         } else {
-            log.info("Product {} Rejected", productEntity.getSku());
+            log.info("Product {} Rejected by Catalog", productEntity.getSku());
             eventPublisher.publishEvent(ProductSaleEvent.builder()
                     .requestId(event.getRequestId())
                     .productId(productEntity.getId())

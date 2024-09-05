@@ -1,4 +1,4 @@
-package io.pivotal.events.product.event;
+package io.pivotal.events.product.merch;
 
 public enum ProductSaleResultType {
     REJECTED,
