@@ -51,6 +51,7 @@ public class ProductServiceTest {
 
         ArgumentCaptor<ProductEntity> captor = ArgumentCaptor.forClass(ProductEntity.class);
         verify(productRepository, atMost(2)).save(captor.capture());
+        assertThat(captor.getValue().getInventoryStatus()).isNull();
         await().until(() -> captor.getValue().getInventoryStatus() != null);
     }
 

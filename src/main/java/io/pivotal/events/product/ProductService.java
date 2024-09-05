@@ -6,12 +6,11 @@ import io.pivotal.events.product.merch.ProductMerchandising;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.ApplicationEventMulticaster;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +20,7 @@ public class ProductService {
     private final ProductMerchandising productMerchandising;
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
-    private final ApplicationEventMulticaster eventMulticaster;
+    private final ApplicationEventPublisher eventPublisher;
 
     @SneakyThrows
     public ProductRecord getProductById(Long productId) {
@@ -35,7 +34,7 @@ public class ProductService {
         log.info("Creating product {}", productRecord);
         ProductEntity productEntity = productMapper.newProductRecordToProductEntity(productRecord);
         productRepository.save(productEntity);
-        eventMulticaster.multicastEvent(new ProductCreatedEvent(productEntity));
+        eventPublisher.publishEvent(new ProductCreatedEvent(productEntity));
         return productMapper.productEntityToProductRecord(productEntity);
     }
 

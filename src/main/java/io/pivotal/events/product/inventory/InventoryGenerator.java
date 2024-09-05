@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,6 +17,7 @@ public class InventoryGenerator {
 
     private final ProductService productService;
 
+    @Async
     @EventListener
     void handle(ProductCreatedEvent event) {
         establishInventory(event.getProductEntity());
