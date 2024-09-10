@@ -1,5 +1,6 @@
 package io.pivotal.events.product;
 
+import io.pivotal.events.product.sse.ProductSseEmitter;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class ProductServiceTest {
     @MockBean
     ProductRepository productRepository;
 
+    @MockBean
+    ProductSseEmitter productSseEmitter;
+
     @Test
     void createProduct() {
         NewProductRecord product = new NewProductRecord(
@@ -46,6 +50,13 @@ public class ProductServiceTest {
             "Mystery Thing",
             "b32-wtf"
         );
+        ProductEntity productEntity = ProductEntity.builder()
+                .id(1L)
+                .name(product.name())
+                .sku(product.sku())
+                .description(product.description())
+                .build();
+        when(productRepository.save(any())).thenReturn(productEntity);
 
         productService.createProduct(product);
 
@@ -53,6 +64,7 @@ public class ProductServiceTest {
         verify(productRepository, atMost(2)).save(captor.capture());
         assertThat(captor.getValue().getInventoryStatus()).isNull();
         await().until(() -> captor.getValue().getInventoryStatus() != null);
+        await().untilAsserted(() -> verify(productSseEmitter).emitProductUpdated(new ProductRecord(productEntity.getId(), product.name(), product.description(), product.sku(), null)));
     }
 
     @Test
