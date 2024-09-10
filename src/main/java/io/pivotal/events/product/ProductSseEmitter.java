@@ -1,6 +1,7 @@
-package io.pivotal.events.product.inventory;
+package io.pivotal.events.product;
 
-import io.pivotal.events.product.ProductRecord;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -9,7 +10,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Component
-public class InventorySseEmitter {
+@Slf4j
+public class ProductSseEmitter {
 
     private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
 
@@ -17,15 +19,16 @@ public class InventorySseEmitter {
         emitters.add(emitter);
         emitter.onCompletion(() -> emitters.remove(emitter));
         emitter.onTimeout(() -> emitters.remove(emitter));
+        emitter.onError(error -> emitters.remove(emitter));
     }
 
     public void emitProductUpdated(ProductRecord product) {
+        log.info("Publishing event to emitters {}", emitters.size());
         for (SseEmitter emitter : emitters) {
             try {
-                emitter.send(product);
+                emitter.send(product, MediaType.APPLICATION_JSON);
             } catch (IOException e) {
-                emitter.complete();
-                emitters.remove(emitter);
+                log.info("Publish event error handled. {} emitters remaining.", emitters.size());
             }
         }
     }

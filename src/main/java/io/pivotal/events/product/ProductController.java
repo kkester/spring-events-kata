@@ -14,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
+    private final ProductSseEmitter productSseEmitter;
 
     @GetMapping("/api/sales")
     public List<ProductRecord> getProductsOnSale() {
@@ -29,7 +30,7 @@ public class ProductController {
     public SseEmitter subscribe() {
         // Add the emitter to a list of subscribers or handle it in another way
         SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
-        productService.addEmitter(sseEmitter);
+        productSseEmitter.addEmitter(sseEmitter);
         return sseEmitter;
     }
 }

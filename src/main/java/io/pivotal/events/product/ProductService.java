@@ -2,7 +2,6 @@ package io.pivotal.events.product;
 
 import io.pivotal.events.catalog.CatalogEntity;
 import io.pivotal.events.product.event.ProductCreatedEvent;
-import io.pivotal.events.product.inventory.InventorySseEmitter;
 import io.pivotal.events.product.merch.ProductMerchandising;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -10,10 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +21,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
     private final ApplicationEventPublisher eventPublisher;
-    private final InventorySseEmitter inventorySseEmitter;
+    private final ProductAddedProducer productAddedProducer;
 
     @SneakyThrows
     public ProductRecord getProductById(Long productId) {
@@ -44,7 +41,7 @@ public class ProductService {
 
     public void updateProduct(ProductEntity productEntity) {
         ProductEntity savedProductEntity = productRepository.save(productEntity);
-        inventorySseEmitter.emitProductUpdated(productMapper.productEntityToProductRecord(savedProductEntity));
+        productAddedProducer.publish(productMapper.productEntityToProductRecord(savedProductEntity));
     }
 
     @Async
@@ -63,9 +60,5 @@ public class ProductService {
         return productMerchandising.getProductsOnSale(productEntities).stream()
                 .map(productMapper::productEntityToProductRecord)
                 .toList();
-    }
-
-    public void addEmitter(SseEmitter emitter) {
-        inventorySseEmitter.addEmitter(emitter);
     }
 }
