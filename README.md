@@ -10,7 +10,7 @@ The project comes with a set of Spring Boot tests and the minimal code needed fo
 When a catalog is created, implement logic that will assign all existing products to the new catalog asynchronously 
 
 #### Create Product
-When a product is created, trigger an event that will establish inventory for the new product.
+When a product is created, trigger an event that will establish inventory for the new product.  Once the inventory has been established, emit an event to the frontend to display the results.  (see [index html](http://localhost:8080/index.html))
 
 #### Get Catalog with Products
 Retrieve a catalog and then retrieve the products and convert them to records asynchronously.
