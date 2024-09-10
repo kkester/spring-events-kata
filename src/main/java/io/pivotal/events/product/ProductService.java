@@ -3,6 +3,7 @@ package io.pivotal.events.product;
 import io.pivotal.events.catalog.CatalogEntity;
 import io.pivotal.events.product.event.ProductCreatedEvent;
 import io.pivotal.events.product.merch.ProductMerchandising;
+import io.pivotal.events.product.sse.ProductUpdatedProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
     private final ApplicationEventPublisher eventPublisher;
-    private final ProductAddedProducer productAddedProducer;
+    private final ProductUpdatedProducer productUpdatedProducer;
 
     @SneakyThrows
     public ProductRecord getProductById(Long productId) {
@@ -41,7 +42,7 @@ public class ProductService {
 
     public void updateProduct(ProductEntity productEntity) {
         ProductEntity savedProductEntity = productRepository.save(productEntity);
-        productAddedProducer.publish(productMapper.productEntityToProductRecord(savedProductEntity));
+        productUpdatedProducer.publish(productMapper.productEntityToProductRecord(savedProductEntity));
     }
 
     @Async

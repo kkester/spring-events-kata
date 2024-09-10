@@ -1,6 +1,3 @@
-server:
-  port: 8081
-
 spring:
   application:
     name: events-kata
@@ -16,4 +13,4 @@ spring:
       repositories.enabled: true
       host: localhost
       port: 6379
-      topic: movie.update
+  product.update.topic: product.update

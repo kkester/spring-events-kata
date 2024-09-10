@@ -1,5 +1,6 @@
-package io.pivotal.events.product;
+package io.pivotal.events.product.sse;
 
+import io.pivotal.events.product.ProductRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,6 @@
-package io.pivotal.events.product;
+package io.pivotal.events.product.sse;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import io.pivotal.events.product.ProductRecord;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -11,13 +11,12 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class ProductAddedProducer {
-    private final RedisTemplate<String, String> redisTemplate;
+public class ProductUpdatedProducer {
+    private final RedisTemplate<String, Object> redisTemplate;
     private final ChannelTopic channelTopic;
-    private final ObjectMapper objectMapper;
 
     @SneakyThrows
     public void publish(ProductRecord productRecord) {
-        redisTemplate.convertAndSend(channelTopic.getTopic(), objectMapper.writeValueAsString(productRecord));
+        redisTemplate.convertAndSend(channelTopic.getTopic(), productRecord);
     }
 }
