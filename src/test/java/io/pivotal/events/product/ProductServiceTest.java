@@ -46,12 +46,19 @@ public class ProductServiceTest {
             "Mystery Thing",
             "b32-wtf"
         );
+        ProductEntity productEntity = ProductEntity.builder()
+                .id(1L)
+                .name(product.name())
+                .sku(product.sku())
+                .description(product.description())
+                .build();
+        when(productRepository.save(any())).thenReturn(productEntity);
 
         productService.createProduct(product);
 
         ArgumentCaptor<ProductEntity> captor = ArgumentCaptor.forClass(ProductEntity.class);
-        verify(productRepository, atMost(2)).save(captor.capture());
-        await().until(() -> captor.getValue().getInventoryStatus() != null);
+        await().untilAsserted(() -> verify(productRepository, times(2)).save(captor.capture()));
+        assertThat(captor.getAllValues().get(1).getInventoryStatus()).isNotNull();
     }
 
     @Test
