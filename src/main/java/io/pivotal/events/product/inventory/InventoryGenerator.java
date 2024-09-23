@@ -1,8 +1,8 @@
 package io.pivotal.events.product.inventory;
 
-import io.pivotal.events.product.event.ProductCreatedEvent;
 import io.pivotal.events.product.ProductEntity;
 import io.pivotal.events.product.ProductService;
+import io.pivotal.events.product.event.ProductCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public class InventoryGenerator {
     }
 
     @SneakyThrows
-    public void establishInventory(ProductEntity productEntity) {
+    private void establishInventory(ProductEntity productEntity) {
         Thread.sleep(3000);
         log.info("Assigning inventory to {}", productEntity);
         InventoryStatusEntity inventoryStatus = InventoryStatusEntity.builder()

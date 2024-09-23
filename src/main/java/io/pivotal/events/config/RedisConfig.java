@@ -14,19 +14,19 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 public class RedisConfig {
 
     @Value("${spring.product.update.topic}")
-    private String redisTopic;
+    private String productUpdateRedisTopic;
 
     @Bean
-    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory connectionFactory, MessageListener redisMessageListener) {
+    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory connectionFactory, MessageListener productUpdateMessageListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(redisMessageListener, getChannelTopic());
+        container.addMessageListener(productUpdateMessageListener, productUpdateChannelTopic());
         return container;
     }
 
     @Bean
-    public ChannelTopic getChannelTopic() {
-        return new ChannelTopic(redisTopic);
+    public ChannelTopic productUpdateChannelTopic() {
+        return new ChannelTopic(productUpdateRedisTopic);
     }
 
     @Bean

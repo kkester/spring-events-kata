@@ -12,11 +12,12 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class ProductUpdatedProducer {
+
     private final RedisTemplate<String, Object> redisTemplate;
-    private final ChannelTopic channelTopic;
+    private final ChannelTopic productUpdateChannelTopic;
 
     @SneakyThrows
     public void publish(ProductRecord productRecord) {
-        redisTemplate.convertAndSend(channelTopic.getTopic(), productRecord);
+        redisTemplate.convertAndSend(productUpdateChannelTopic.getTopic(), productRecord);
     }
 }
