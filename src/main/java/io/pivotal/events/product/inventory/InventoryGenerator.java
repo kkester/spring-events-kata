@@ -7,6 +7,8 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -16,7 +18,7 @@ public class InventoryGenerator {
 
     @SneakyThrows
     public void establishInventory(ProductEntity productEntity) {
-        Thread.sleep(3000);
+        TimeUnit.MILLISECONDS.sleep(3000);
         log.info("Assigning inventory to {}", productEntity);
         InventoryStatusEntity inventoryStatus = InventoryStatusEntity.builder()
             .status(InventoryStatus.IN_STOCK)
